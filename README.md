@@ -1,10 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Workflow
+
+### Управление задачми
+
+Для управления задачами используется [Jira](https://www.atlassian.com/software/jira).
+
+### История изменений
+
+Посмотреть историю коммитов можно в репозитории GitHub, [здесь](https://github.com/username/project/commits/main).
+
+### Структура работы
+
+**В репозитории есть следующие основные ветки:**
+
+1. **`main`** — стабильная ветка для релизов.
+2. **`dev`** — ветка для интеграции всех новых функций и изменений перед их выпуском.
+
+**Для каждой задачи:**
+
+1. Создать задачу в Jira с описанием цели, критериев выполнения и сроков.
+2. Начать работу с задачей:
+   - Создать новую ветку в Git от ветки `dev` (название ветки скопировать из сведений выполняемой задачи в Jira).
+   - В Jira изменить статус задачи на "**в разработке**".
+3. Разбить задачу на небольшие, выполнимые этапы для упрощения работы.
+4. Выполнить задачи:
+   - Вносить изменения в код.
+   - Делать частые коммиты с информативными сообщениями (например, `Add login form layout`).
+5. Связывать изменения с задачей в Jira:
+   - Пушить ветку в удалённый репозиторий.
+   - Добавить ссылку на коммит или pull request в задачу Jira.
+6. Когда задача выполнена:
+   1. Создать pull request в ветку `dev`
+      - Проверить изменения (ревью, тестирование).
+      - Внести исправления, если нужно.
+      - После успешной проверки замержить ветку в `dev`.
+   2. В Jira изменить статус задачи на "**готово**".
+7. Завершить работу с веткой:
+   - После мержинга pull request удалить ветку с которой велась работа.
+
+### Релизная работа
+
+- После завершения всех задач для релиза:
+  1. Создать pull request из ветки `dev` в `main`.
+  2. Проверить изменения, протестировать и выполить финальное ревью.
+  3. Смержить изменения в `main`.
+  4. Создать тэг с версией релиза (например, `v1.0.0`).
 
 ## Getting Started
 
-First, run the development server:
+Запуск dev-сервера:
 
-```bash
+```shell
 npm run dev
 # or
 yarn dev
@@ -14,23 +59,4 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Сервер будет запущен на [http://localhost:3000](http://localhost:3000).
