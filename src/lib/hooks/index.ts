@@ -1,1 +1,1 @@
-export * from "@/di/hooks";
+export * from "@/di/store/hooks";
