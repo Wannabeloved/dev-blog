@@ -11,6 +11,33 @@ import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 export const ICONS = {
 	like: async () =>
 		(await import(`@fortawesome/free-solid-svg-icons/faThumbsUp`)).faThumbsUp,
+	signOut: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faRightFromBracket`))
+			.faRightFromBracket,
+	caretLeft: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faCaretLeft`)).faCaretLeft,
+	file: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faFileLines`)).faFileLines,
+	users: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faUsers`)).faUsers,
+	calendar: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faCalendar`)).faCalendar,
+	comment: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faComment`)).faComment,
+	save: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faFloppyDisk`))
+			.faFloppyDisk,
+	trash: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faTrashCan`)).faTrashCan,
+	paperPlane: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faPaperPlane`))
+			.faPaperPlane,
+	penToSquare: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faPenToSquare`))
+			.faPenToSquare,
+	circleUser: async () =>
+		(await import(`@fortawesome/free-solid-svg-icons/faCircleUser`))
+			.faCircleUser,
 };
 
 export const getIcon = async (
@@ -22,5 +49,5 @@ export const getIcon = async (
 	// 	(await import(`@fortawesome/free-solid-svg-icons/${name}`))[name],
 	// );
 	console.log(name);
-	return await ICONS[name]();
+	return await ICONS["circleUser"]();
 };
