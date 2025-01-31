@@ -1,4 +1,4 @@
-// отправка чего-то в хранилище
+
 // export type AppDispatch = ReturnType<typeof import("@/di/store/store").makeStore>["dispatch"];
 // type storeDispatch = (type: string, payload: any) => void;
 // type storeSelect<T> = (selector: (state: any) => T) => T;
