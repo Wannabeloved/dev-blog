@@ -1,39 +1,46 @@
 {
-  "name": "web-dev-blog",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.7.2",
-    "@fortawesome/free-brands-svg-icons": "^6.7.2",
-    "@fortawesome/free-regular-svg-icons": "^6.7.2",
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@reduxjs/toolkit": "^2.5.1",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.3",
-    "next": "15.1.6",
-    "prettier": "^3.4.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-redux": "^9.2.0",
-    "styled-components": "^6.1.14"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/react-redux": "^7.1.34",
-    "@types/styled-components": "^5.1.34",
-    "babel-plugin-styled-components": "^2.1.4",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.6",
-    "typescript": "^5.7.3"
-  }
+	"name": "web-dev-blog",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "cross-env next dev --turbopack",
+		"build": "next build",
+		"builded:start": "next start",
+		"lint": "next lint",
+		"mock": "node mock/index.js",
+		"check-env": "cross-env PORT=3001 echo $PORT"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "6.7.2",
+		"@fortawesome/free-brands-svg-icons": "6.7.2",
+		"@fortawesome/free-regular-svg-icons": "6.7.2",
+		"@fortawesome/free-solid-svg-icons": "6.7.2",
+		"@fortawesome/react-fontawesome": "0.2.2",
+		"@reduxjs/toolkit": "2.5.1",
+		"cross-spawn": "7.0.6",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "5.2.3",
+		"next": "15.1.6",
+		"prettier": "^3.4.2",
+		"react": "^19.0.0",
+		"react-dom": "19.0.0",
+		"react-redux": "^9.2.0",
+		"styled-components": "6.1.14"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "3.2.0",
+		"@types/json-server": "0.14.7",
+		"@types/node": "22.13.0",
+		"@types/react": "^19",
+		"@types/react-dom": "19.0.3",
+		"@types/react-redux": "7.1.34",
+		"@types/styled-components": "5.1.34",
+		"babel-plugin-styled-components": "^2.1.4",
+		"dotenv": "16.4.7",
+		"eslint": "9.19.0",
+		"eslint-config-next": "15.1.6",
+		"json-server": "^0.17.4",
+		"nodemon": "^3.1.9",
+		"typescript": "5.7.3"
+	}
 }
