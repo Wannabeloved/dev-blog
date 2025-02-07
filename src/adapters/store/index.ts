@@ -1,5 +1,5 @@
 "use client";
-import { StoreProvider as Signature } from "./types";
+import { StoreProvider as Signature } from "../../frameworks/store/types";
 
 import { Provider } from "react-redux";
 import { makeStore } from "./store";

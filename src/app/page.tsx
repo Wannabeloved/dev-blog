@@ -4,8 +4,8 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { Button } from "@/components/atoms/Button";
-import { increment } from "@/features/counter.slice";
+import { Button } from "@/components/shared/Button";
+import { increment } from "@/adapters/store/counter.slice";
 
 import { Icon } from "@/lib/icons/Icon";
 import { ICONS } from "@/lib/icons/getIcon";

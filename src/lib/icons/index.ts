@@ -1,1 +1,1 @@
-export { Icon } from "../../components/atoms/Icon";
+export { Icon } from "../../components/shared/Icon";

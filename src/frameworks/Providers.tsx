@@ -1,4 +1,4 @@
-import { StoreProvider } from "./store";
+import { StoreProvider } from "../adapters/store";
 import { StyledComponentsRegistry } from "./styled-components/registry";
 
 type ProviderType = (props: { children: React.ReactNode }) => React.JSX.Element;
