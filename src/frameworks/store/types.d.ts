@@ -1,7 +1,7 @@
 import type { Provider as ReactReduxProvider } from "react-redux";
 type Provider = typeof ReactReduxProvider;
 
-export type makeStoreType = typeof import("@/di/store/store").makeStore;
+export type makeStoreType = typeof import("@/adapters/store/store").makeStore;
 export type AppStore = ReturnType<makeStoreType>;
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];

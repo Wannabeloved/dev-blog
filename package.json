@@ -3,11 +3,11 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "cross-env next dev --turbopack",
+		"dev": "next dev --turbopack",
 		"build": "next build",
 		"builded:start": "next start",
 		"lint": "next lint",
-		"mock": "node mock/index.js",
+		"mock": "node _mock/index.js",
 		"check-env": "cross-env PORT=3001 echo $PORT"
 	},
 	"dependencies": {
@@ -21,6 +21,7 @@
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-prettier": "5.2.3",
 		"next": "15.1.6",
+		"next-auth": "^5.0.0-beta.25",
 		"prettier": "^3.4.2",
 		"react": "^19.0.0",
 		"react-dom": "19.0.0",

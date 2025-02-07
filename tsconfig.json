@@ -19,6 +19,10 @@
 			}
 		],
 		"paths": {
+			"@/core/domain/*": ["./src/core/1.domain/*"],
+			"@/core/application/*": ["./src/core/2.application/*"],
+			"@/core/interface-adapters/*": ["./src/core/3.interface-adapters/*"],
+			"@/core/infrastructure/*": ["./src/core/4.infrastructure/*"],
 			"@/*": ["./src/*"]
 		}
 	},
