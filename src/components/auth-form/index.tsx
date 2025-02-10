@@ -12,6 +12,7 @@ import Title from "./ui/title";
 import InputsContainer from "./ui/inputs-container";
 import SubmitButton from "./ui/submit-button";
 import ErrorMessageContainer from "./ui/error-message-container";
+import { Button } from "@/components/ui/button";
 
 const AuthForm: Signature = ({ width, action }) => {
 	return (
@@ -50,9 +51,9 @@ const AuthForm: Signature = ({ width, action }) => {
 							</div>
 						</InputsContainer>
 						<input type="hidden" name="redirectTo" value={callbackUrl} />
-						<SubmitButton aria-disabled={isPending}>
+						<Button type="submit" aria-disabled={isPending}>
 							Log in <Icon icon={"like"} />
-						</SubmitButton>
+						</Button>
 						<ErrorMessageContainer aria-live="polite" aria-atomic="true">
 							{errorMessage && (
 								<>

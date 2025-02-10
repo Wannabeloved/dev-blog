@@ -34,7 +34,6 @@ export async function registerAction(
 			login: formData.get("login"),
 			password: formData.get("password"),
 		});
-		return { success: true };
 
 		console.log("FINISH!!!");
 	} catch (error) {
