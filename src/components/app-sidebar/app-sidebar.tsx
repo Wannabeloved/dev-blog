@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import NavAccount from "./nav-account/index";
+import AppLogo from "./app-logo";
 
 // This is sample data.
 const data = {
@@ -161,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<TeamSwitcher teams={data.teams} Link={Link} />
+				<AppLogo Link={Link} />
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={data.navMain} Link={Link} />
