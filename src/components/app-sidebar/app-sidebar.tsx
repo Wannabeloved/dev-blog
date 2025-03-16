@@ -12,10 +12,10 @@ import {
 	PieChart,
 	Settings2,
 	SquareTerminal,
+	Users,
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
 import { TeamSwitcher } from "./team-switcher";
 import {
 	Sidebar,
@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import NavAccount from "./nav-account/index";
 import AppLogo from "./app-logo";
+import { useUser } from "@/adapters/store/hooks/useUser";
 
 // This is sample data.
 const data = {
@@ -116,60 +117,45 @@ const data = {
 			],
 		},
 		{
-			title: "Settings",
-			url: "#",
+			title: "Администрирование",
+			url: "/admin",
 			icon: Settings2,
 			items: [
 				{
-					title: "General",
-					url: "#",
+					title: "Пользователи",
+					url: "/admin/users",
 				},
 				{
-					title: "Team",
-					url: "#",
-				},
-				{
-					title: "Billing",
-					url: "#",
-				},
-				{
-					title: "Limits",
+					title: "Настройки",
 					url: "#",
 				},
 			],
 		},
 	],
-	projects: [
-		{
-			name: "Design Engineering",
-			url: "#",
-			icon: Frame,
-		},
-		{
-			name: "Sales & Marketing",
-			url: "#",
-			icon: PieChart,
-		},
-		{
-			name: "Travel",
-			url: "#",
-			icon: Map,
-		},
-	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const { user } = useUser();
+	const isAdmin = user?.roleId === 0;
+
+	// Фильтруем пункты меню в зависимости от роли пользователя
+	const filteredNavMain = data.navMain.filter((item) => {
+		// Если это не раздел администрирования, показываем всем
+		if (item.title !== "Администрирование") return true;
+		// Раздел администрирования показываем только админам
+		return isAdmin;
+	});
+
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
 				<AppLogo Link={Link} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={data.navMain} Link={Link} />
-				<NavProjects projects={data.projects} Link={Link} />
+				<NavMain items={filteredNavMain} />
 			</SidebarContent>
 			<SidebarFooter>
-				<NavAccount user={data.user} Link={Link} />
+				<NavAccount Link={Link} />
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

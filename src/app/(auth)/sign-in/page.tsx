@@ -1,7 +1,23 @@
 import { LoginForm } from "@/components/shadcn-form/login-form";
 import { authenticateAction } from "../actions";
+import { signIn } from "@/core/2.application/use-cases/mongo/sign-in";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+	async function action(prevState: string | undefined, formData: FormData) {
+		"use server";
+		const email = formData.get("email") as string;
+		const password = formData.get("password") as string;
+		const res = await signIn({ email, password });
+		if (res.ok) {
+			redirect("/");
+		} else {
+			return res.message as
+				| "Invalid credentials."
+				| "Something went wrong."
+				| undefined;
+		}
+	}
 	return (
 		// <section
 		// 	style={{
@@ -21,7 +37,7 @@ export default function Page() {
 				<a href="#" className="flex items-center gap-2 self-center font-medium">
 					Sign In.
 				</a>
-				<LoginForm action={authenticateAction} />
+				<LoginForm action={action} />
 			</div>
 		</div>
 	);

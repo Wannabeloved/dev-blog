@@ -8,8 +8,13 @@ export const Form = ({ form, action, children }) => {
 				action={action}
 				onSubmit={form.handleSubmit((data, event) => {
 					console.log("SUBMIT");
-					console.log(event);
-					startTransition(() => action(new FormData(event.target)));
+					// console.log(event);
+					console.log(data);
+					const formData = new FormData();
+					for (const key in data) {
+						formData.append(key, data[key]);
+					}
+					startTransition(() => action(formData));
 				})}
 			>
 				{children}

@@ -25,19 +25,25 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { signOut } from "@/core/interface-adapters/auth/auth";
 
 export function NavUser({
 	user,
+	logout,
 	Link,
+	signOutAction,
 }: {
 	user: {
-		name: string;
 		email: string;
-		avatar: string;
 	};
+	logout: any;
 	Link: React.FC<{ href: string; children: React.ReactElement }>;
+	signOutAction: ((formData: FormData) => void | Promise<void>) | undefined;
 }) {
 	const { isMobile } = useSidebar();
+	const handleLogout = () => {
+		logout();
+	};
 
 	return (
 		<SidebarMenu>
@@ -49,12 +55,17 @@ export function NavUser({
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage src={user.avatar} alt={user.name} />
+								<AvatarImage
+									src={
+										"https://www.servicenow.com/community/s/legacyfs/online/avatars_servicenow/a9a7392fdbbfdb00d58ea345ca96198f.jpg"
+									}
+									alt={user?.email}
+								/>
 								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-semibold">{user.name}</span>
-								<span className="truncate text-xs">{user.email}</span>
+								<span className="truncate font-semibold">{user?.email}</span>
+								{/* <span className="truncate text-xs">{user?.email}</span> */}
 							</div>
 							<ChevronsUpDown className="ml-auto size-4" />
 						</SidebarMenuButton>
@@ -68,12 +79,17 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage src={user.avatar} alt={user.name} />
+									<AvatarImage
+										src={
+											"https://www.servicenow.com/community/s/legacyfs/online/avatars_servicenow/a9a7392fdbbfdb00d58ea345ca96198f.jpg"
+										}
+										alt={user?.email}
+									/>
 									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-semibold">{user.name}</span>
-									<span className="truncate text-xs">{user.email}</span>
+									<span className="truncate font-semibold">{user?.email}</span>
+									{/* <span className="truncate text-xs">{user?.email}</span> */}
 								</div>
 							</div>
 						</DropdownMenuLabel>
@@ -101,8 +117,11 @@ export function NavUser({
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
-							<LogOut />
-							Log out
+							<form className="contents" onSubmit={handleLogout}>
+								<button type="submit" className="contents">
+									<LogOut /> Sign out
+								</button>
+							</form>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

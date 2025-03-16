@@ -1,7 +1,10 @@
 "use server";
 
-import { signIn, signUp } from "@/core/interface-adapters/auth/auth";
+import { signIn, signOut, signUp } from "@/core/interface-adapters/auth/auth";
 import { AuthError } from "next-auth";
+
+// Определяем тип для провайдеров аутентификации
+export type AuthProviders = "credentials" | "google" | "github";
 
 export async function authenticateAction(
 	prevState: string | undefined,
@@ -9,7 +12,8 @@ export async function authenticateAction(
 ) {
 	try {
 		console.log("START");
-		await signIn("credentials", formData);
+		const provider: AuthProviders = formData.get("p") as AuthProviders;
+		const res = await signIn(provider);
 		console.log("FINISH!!!");
 	} catch (error) {
 		if (error instanceof AuthError) {
@@ -31,8 +35,8 @@ export async function registerAction(
 	try {
 		console.log("START REGISTER");
 		await signUp({
-			login: formData.get("login"),
-			password: formData.get("password"),
+			login: formData.get("login") as string | undefined,
+			password: formData.get("password") as string | undefined,
 		});
 
 		console.log("FINISH!!!");
@@ -47,4 +51,8 @@ export async function registerAction(
 		}
 		throw error;
 	}
+}
+
+export async function signOutAction() {
+	await signOut({ redirectTo: "/sign-in" });
 }

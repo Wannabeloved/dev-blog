@@ -1,49 +1,70 @@
-import NextAuth from "next-auth";
-import { authConfig } from "@/config/auth.config";
-import Credentials from "next-auth/providers/credentials";
+import { AuthProvidersEnum } from "@/domain/entities/auth";
 
-// import type { User } from "@/app/lib/definitions";
-import { UsersDB } from "@/core/infrastructure/db";
-// import bcrypt from "bcrypt";
-// import postgres from "postgres";
+import { doComparePasswords } from "../utils/do-compare-passwords";
 
-// const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+declare function doGetUserEmailFromOAuth(provider: string): string;
+declare function doGetUserFromDB(email: string): Data | null;
+declare class UnexistedUser {
+	constructor(knownData: { email: string });
+}
+declare class IncorrectPassword {
+	constructor(knownData: { email: string });
+}
 
-async function getUser(login: string) {
+declare interface Props {
+	provider: AuthProvidersEnum;
+	data: Data;
+}
+declare type Data = { email: string; password: string };
+declare function doCheckIsMyError(err: unknown): err is Error;
+
+const providersAuthFunctions: Record<
+	AuthProvidersEnum,
+	(props: Props) => Promise<Data>
+> = {
+	credentials: authorizeWithCredentials,
+	github: authorizeWithOAuth,
+	telegram: (props: Props) => new Promise(() => {}),
+};
+
+async function signIn(provider: AuthProvidersEnum, data: Data) {
 	try {
-		const user = await UsersDB.getUsers().then((res) =>
-			res.filter((user: any) => user.login === login),
-		);
-		return user[0];
-	} catch (error) {
-		console.error("Failed to fetch user:", error);
-		throw new Error("Failed to fetch user.");
+		const user = await providersAuthFunctions[provider]({ provider, data });
+
+		return user;
+	} catch (err) {
+		if (!doCheckIsMyError(err)) throw err;
+
+		switch (err.constructor) {
+			case UnexistedUser:
+				return;
+			case IncorrectPassword:
+				return;
+		}
 	}
 }
 
-export const { auth, signIn, signOut } = NextAuth({
-	...authConfig,
-	providers: [
-		Credentials(
-			Credentials({
-				async authorize(credentials) {
-					const parsedCredentials = {
-						success: true,
-						data: { login: "", password: "" },
-					};
+async function authorizeWithCredentials({ data }: { data: Data }) {
+	let { email, password: receivedPassword } = data;
 
-					if (parsedCredentials.success) {
-						const { login, password } = parsedCredentials.data;
-						const user = await getUser(login);
-						if (!user) return null;
-						const passwordsMatch = password === user.password;
+	const user = await doGetUserFromDB(email);
+	if (!user) throw new UnexistedUser({ email });
 
-						if (passwordsMatch) return user;
-					}
+	const isPasswordCorrect = doComparePasswords(receivedPassword, user.password);
 
-					return null;
-				},
-			}),
-		),
-	],
-});
+	if (!isPasswordCorrect) throw new IncorrectPassword({ email });
+
+	return user;
+}
+async function authorizeWithOAuth({
+	provider,
+}: {
+	provider: AuthProvidersEnum;
+}) {
+	const email = doGetUserEmailFromOAuth(provider);
+
+	const user = doGetUserFromDB(email);
+	if (!user) throw new UnexistedUser({ email });
+
+	return user;
+}

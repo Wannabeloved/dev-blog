@@ -46,19 +46,29 @@ export function LoginForm({
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Form form={form} action={formAction}>
-								<div className="grid gap-6">
-									<div className="flex flex-col gap-4">
-										<OauthLoginButton>
+							<div className="grid gap-6">
+								<div className="flex flex-col gap-4">
+									<form action={formAction}>
+										<OauthLoginButton
+											type="submit"
+											name="provider"
+											value="telegram"
+										>
 											<AppleSvg />
-											Login with Apple
+											Login with Telegram
 										</OauthLoginButton>
-										<OauthLoginButton>
+									</form>
+									<form action={formAction}>
+										<OauthLoginButton type="submit" name="p" value="github">
 											<GoogleSvg />
-											Login with Google
+											Login with GitHub
 										</OauthLoginButton>
-									</div>
-									<Br> Or continue with </Br>
+									</form>
+								</div>
+
+								<Br> Or continue with </Br>
+
+								<Form form={form} action={formAction}>
 									<div className="grid gap-6">
 										<FormField
 											control={form.control}
@@ -106,8 +116,12 @@ export function LoginForm({
 												</FormItem>
 											)}
 										/>
-
-										<Button type="submit" className="w-full">
+										<Button
+											type="submit"
+											className="w-full"
+											name="provider"
+											value="credentials"
+										>
 											Login
 										</Button>
 									</div>
@@ -117,9 +131,9 @@ export function LoginForm({
 											Sign up
 										</Link>
 									</div>
-								</div>
+								</Form>
 								{state && <p>{state}</p>}
-							</Form>
+							</div>
 						</CardContent>
 					</Card>
 				</div>
