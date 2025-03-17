@@ -386,64 +386,72 @@ export default function PostContent({ postId }: PostContentProps) {
 
 				{post.comments.length > 0 ? (
 					<ul className="space-y-4">
-						{post.comments.map((comment: Comment) => (
-							<li key={comment.id} className="p-4 bg-gray-50 rounded-lg">
-								<div className="flex justify-between items-start">
-									<div className="flex-1">
-										<h6 className="text-lg font-semibold mb-2">
-											Автор: {comment.author}
-										</h6>
-										{editingCommentId === comment.id ? (
-											<form action={handleEditComment} className="flex gap-2">
-												<Input
-													name="content"
-													defaultValue={comment.content}
-													disabled={isPending}
-													className="flex-1"
-													required
-													minLength={1}
-												/>
-												<Button type="submit" disabled={isPending}>
-													{isPending ? "Сохранение..." : "Сохранить"}
+						{[...post.comments]
+							.sort((a, b) => {
+								const dateA = new Date(a.publishedAt).getTime();
+								const dateB = new Date(b.publishedAt).getTime();
+								return dateB - dateA; // Обратный порядок (от новых к старым)
+							})
+							.map((comment: Comment) => (
+								<li key={comment.id} className="p-4 bg-gray-50 rounded-lg">
+									<div className="flex justify-between items-start">
+										<div className="flex-1">
+											<h6 className="text-lg font-semibold mb-2">
+												Автор: {comment.author}
+											</h6>
+											{editingCommentId === comment.id ? (
+												<form action={handleEditComment} className="flex gap-2">
+													<Input
+														name="content"
+														defaultValue={comment.content}
+														disabled={isPending}
+														className="flex-1"
+														required
+														minLength={1}
+													/>
+													<Button type="submit" disabled={isPending}>
+														{isPending ? "Сохранение..." : "Сохранить"}
+													</Button>
+													<Button
+														type="button"
+														variant="outline"
+														onClick={() => setEditingCommentId(null)}
+														disabled={isPending}
+													>
+														Отмена
+													</Button>
+												</form>
+											) : (
+												<p>{comment.content}</p>
+											)}
+										</div>
+										{user?.email === comment.author && (
+											<div className="flex gap-2">
+												<Button
+													variant="ghost"
+													size="icon"
+													className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+													onClick={() => setEditingCommentId(comment.id)}
+													disabled={
+														isPending || editingCommentId === comment.id
+													}
+												>
+													<Pencil className="h-4 w-4" />
 												</Button>
 												<Button
-													type="button"
-													variant="outline"
-													onClick={() => setEditingCommentId(null)}
+													variant="ghost"
+													size="icon"
+													className="text-red-500 hover:text-red-700 hover:bg-red-50"
+													onClick={() => handleDeleteComment(comment.id)}
 													disabled={isPending}
 												>
-													Отмена
+													<Trash2 className="h-4 w-4" />
 												</Button>
-											</form>
-										) : (
-											<p>{comment.content}</p>
+											</div>
 										)}
 									</div>
-									{user?.email === comment.author && (
-										<div className="flex gap-2">
-											<Button
-												variant="ghost"
-												size="icon"
-												className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
-												onClick={() => setEditingCommentId(comment.id)}
-												disabled={isPending || editingCommentId === comment.id}
-											>
-												<Pencil className="h-4 w-4" />
-											</Button>
-											<Button
-												variant="ghost"
-												size="icon"
-												className="text-red-500 hover:text-red-700 hover:bg-red-50"
-												onClick={() => handleDeleteComment(comment.id)}
-												disabled={isPending}
-											>
-												<Trash2 className="h-4 w-4" />
-											</Button>
-										</div>
-									)}
-								</div>
-							</li>
-						))}
+								</li>
+							))}
 					</ul>
 				) : (
 					<p className="text-gray-500">Пока нет комментариев</p>

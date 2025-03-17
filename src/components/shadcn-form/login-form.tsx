@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { AppleSvg } from "./ui/apple-svg";
-import { GoogleSvg } from "./ui/google-svg";
+import { TelegramSvg } from "./ui/telegram-svg";
+import { GitHubSvg } from "./ui/github-svg";
 import { OauthLoginButton } from "./ui/oauth-login-button";
 import { Br } from "./ui/br";
 import { Form } from "../shared/Form";
@@ -42,7 +42,7 @@ export function LoginForm({
 						<CardHeader className="text-center">
 							<CardTitle className="text-xl">Welcome back</CardTitle>
 							<CardDescription>
-								Login with your Apple or Google account
+								Login with your Telegram or GitHub account
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -54,13 +54,13 @@ export function LoginForm({
 											name="provider"
 											value="telegram"
 										>
-											<AppleSvg />
+											<TelegramSvg />
 											Login with Telegram
 										</OauthLoginButton>
 									</form>
 									<form action={formAction}>
 										<OauthLoginButton type="submit" name="p" value="github">
-											<GoogleSvg />
+											<GitHubSvg />
 											Login with GitHub
 										</OauthLoginButton>
 									</form>

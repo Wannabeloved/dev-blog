@@ -106,7 +106,7 @@ const HomeWidgets = () => {
 			<div className="slot row-span-2" data-swapy-slot="b">
 				<div className="item item-b" data-swapy-item="b">
 					<div className="handle" data-swapy-handle></div>
-					<div>B</div>
+					<div>Тут могла быть ваша реклама))</div>
 				</div>
 			</div>
 
