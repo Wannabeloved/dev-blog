@@ -1,7 +1,10 @@
 "use client";
 
 import { getPost } from "@/core/2.application/use-cases/mongo/get-post";
-import { Post, Comment } from "@/core/2.application/types/api";
+import type {
+	Comment,
+	Post,
+} from "@/core/2.application/use-cases/mongo/get-post";
 import { notFound } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";

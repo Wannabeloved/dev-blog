@@ -1,38 +1,45 @@
-import { ApiResponse, Post, isSuccessResponse } from "../../types/api";
-import { get } from "../../utils/api";
+import { ApiResponse, isErrorResponse } from "../../types/api";
+
+interface Post {
+	id: string;
+	title: string;
+	content: string;
+	imageUrl: string;
+	comments: {
+		id: string;
+		content: string;
+		author: string;
+		publishedAt: string;
+	}[];
+	publishedAt: string;
+}
 
 interface PostsResponse {
 	posts: Post[];
 	lastPage: number;
 }
 
-/**
- * Получает список постов с пагинацией и поиском
- */
-export async function getPosts(
-	page: number = 1,
-	search: string = "",
-	limit: number = 9,
-): Promise<PostsResponse> {
-	const params: Record<string, string> = {
-		page: page.toString(),
-		limit: limit.toString(),
-	};
+export async function getPosts(page = 1, search = ""): Promise<PostsResponse> {
+	try {
+		const url = new URL("http://localhost:5000/api/posts");
+		url.searchParams.append("page", page.toString());
+		if (search?.length > 0) url.searchParams.append("search", search);
 
-	if (search) {
-		params.search = search;
+		const res = await fetch(url.toString(), {
+			method: "GET",
+			credentials: "include",
+		});
+
+		const data = (await res.json()) as PostsResponse;
+		console.log("data: ", data);
+		if (isErrorResponse(data)) {
+			throw new Error(data.message);
+		}
+
+		return data;
+	} catch (err) {
+		console.error("getPosts - error:", err);
+		return { posts: [], lastPage: 1 };
 	}
-
-	const response = await get<PostsResponse>("/posts", params);
-
-	if (!response.ok) {
-		throw new Error(response.message || "Не удалось загрузить посты");
-	}
-
-	if (!isSuccessResponse<PostsResponse>(response)) {
-		throw new Error("Неверный формат ответа от сервера");
-	}
-
-	return response.data;
 }
 

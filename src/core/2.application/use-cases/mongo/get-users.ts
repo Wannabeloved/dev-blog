@@ -1,10 +1,21 @@
-import { ApiResponse, User } from "../../types/api";
-import { get } from "../../utils/api";
+import { ApiResponse, isErrorResponse } from "../../types/api";
+import { User } from "../../types/auth";
 
-/**
- * Получает список пользователей
- */
 export async function getUsers(): Promise<ApiResponse<User[]>> {
-	return get<User[]>("/admin/users");
+	try {
+		const res = await fetch("http://localhost:5000/api/admin/users", {
+			method: "GET",
+			credentials: "include",
+		});
+
+		const data = await res.json();
+
+		if (isErrorResponse(data)) throw data;
+
+		return { ok: true, ...data };
+	} catch (err) {
+		console.error("getUsers - error:", err);
+		return { ok: false, ...(err as any) };
+	}
 }
 

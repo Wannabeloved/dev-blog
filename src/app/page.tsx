@@ -74,6 +74,7 @@ export default function Home() {
 			setIsLoading(true);
 			try {
 				const response = await getPosts(page, search);
+				console.log("response", response);
 				setData({ posts: response.posts, lastPage: response.lastPage });
 			} catch (error) {
 				console.error("Failed to fetch posts:", error);

@@ -4,11 +4,12 @@ import { redirect } from "next/navigation";
 import { signUp } from "@/core/2.application/use-cases/mongo/sign-up";
 
 export default function Page() {
-	async function action(prevState: string | undefined, formData: FormData) {
+	async function action(_: any, formData: FormData) {
 		"use server";
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
-		const res = await signUp({ email, password });
+		const confirmPassword = password; // В идеале здесь должна быть проверка подтверждения пароля
+		const res = await signUp({ email, password, confirmPassword });
 		if (res.ok) {
 			redirect("/");
 		} else {
@@ -41,3 +42,4 @@ export default function Page() {
 		// </section>
 	);
 }
+

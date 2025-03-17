@@ -5,7 +5,7 @@ import { signIn } from "@/core/2.application/use-cases/mongo/sign-in";
 import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
-	async function action(prevState: string | undefined, formData: FormData) {
+	async function action(_: any, formData: FormData) {
 		"use server";
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;

@@ -18,9 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { getUsers } from "@/core/2.application/use-cases/mongo/get-users";
-import { getRoles } from "@/core/2.application/use-cases/mongo/get-roles";
-import { User, Role } from "@/core/2.application/types/api";
+import { getUsers, User } from "@/core/2.application/use-cases/mongo/get-users";
+import { getRoles, Role } from "@/core/2.application/use-cases/mongo/get-roles";
 import { toast } from "sonner";
 import { useUser } from "@/adapters/store/hooks/useUser";
 import { updateUserRoleAction, deleteUserAction } from "./actions";

@@ -1,19 +1,10 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { ApiResponse, User } from "@/core/2.application/types/api";
-import { updateUserRole } from "@/core/2.application/use-cases/mongo/update-user-role";
-import { deleteUser } from "@/core/2.application/use-cases/mongo/delete-user";
+import { User } from "@/core/2.application/use-cases/mongo/get-users";
 
-/**
- * Серверное действие для обновления роли пользователя
- */
-export async function updateUserRoleAction(
-	userId: string,
-	roleId: number,
-): Promise<ApiResponse<User>> {
+export async function updateUserRoleAction(userId: string, roleId: number) {
 	try {
-		// Проверяем наличие токена
 		const cookieStore = await cookies();
 		const token = cookieStore.get("token")?.value;
 
@@ -25,8 +16,35 @@ export async function updateUserRoleAction(
 			};
 		}
 
-		// Используем функцию из core слоя
-		return await updateUserRole(userId, roleId);
+		const response = await fetch(
+			`http://localhost:5000/api/admin/users/${userId}`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: `token=${token}`,
+				},
+				body: JSON.stringify({ role: roleId }),
+				credentials: "include",
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при изменении роли пользователя",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Роль пользователя успешно изменена",
+			data: data.data,
+		};
 	} catch (error) {
 		return {
 			ok: false,
@@ -39,14 +57,8 @@ export async function updateUserRoleAction(
 	}
 }
 
-/**
- * Серверное действие для удаления пользователя
- */
-export async function deleteUserAction(
-	userId: string,
-): Promise<ApiResponse<void>> {
+export async function deleteUserAction(userId: string) {
 	try {
-		// Проверяем наличие токена
 		const cookieStore = await cookies();
 		const token = cookieStore.get("token")?.value;
 
@@ -58,8 +70,32 @@ export async function deleteUserAction(
 			};
 		}
 
-		// Используем функцию из core слоя
-		return await deleteUser(userId);
+		const response = await fetch(
+			`http://localhost:5000/api/admin/users/${userId}`,
+			{
+				method: "DELETE",
+				headers: {
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при удалении пользователя",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Пользователь успешно удален",
+		};
 	} catch (error) {
 		return {
 			ok: false,

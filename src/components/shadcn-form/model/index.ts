@@ -28,3 +28,4 @@ export const Model = ({ action, children }) => {
 	);
 	return children({ formAction, form, state });
 };
+

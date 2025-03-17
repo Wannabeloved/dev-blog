@@ -1,20 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { ApiResponse, Comment, Post } from "@/core/2.application/types/api";
-import { addComment } from "@/core/2.application/use-cases/mongo/add-comment";
-import { deleteComment } from "@/core/2.application/use-cases/mongo/delete-comment";
-import { editComment } from "@/core/2.application/use-cases/mongo/edit-comment";
-import { updatePost } from "@/core/2.application/use-cases/mongo/update-post";
-import { deletePost } from "@/core/2.application/use-cases/mongo/delete-post";
 
-/**
- * Серверное действие для добавления комментария
- */
-export async function addCommentAction(
-	postId: string,
-	formData: FormData,
-): Promise<ApiResponse<Comment>> {
+export async function addCommentAction(postId: string, formData: FormData) {
 	try {
 		const content = formData.get("content");
 		const cookieStore = await cookies();
@@ -36,7 +24,35 @@ export async function addCommentAction(
 			};
 		}
 
-		return await addComment(postId, content);
+		const response = await fetch(
+			`http://localhost:5000/api/posts/${postId}/comments`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+				body: JSON.stringify({ content }),
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при добавлении комментария",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Комментарий успешно добавлен",
+			data: data.data,
+		};
 	} catch (error) {
 		return {
 			ok: false,
@@ -49,13 +65,7 @@ export async function addCommentAction(
 	}
 }
 
-/**
- * Серверное действие для удаления комментария
- */
-export async function deleteCommentAction(
-	postId: string,
-	commentId: string,
-): Promise<ApiResponse<void>> {
+export async function deleteCommentAction(postId: string, commentId: string) {
 	try {
 		const cookieStore = await cookies();
 		const token = cookieStore.get("token")?.value;
@@ -68,7 +78,32 @@ export async function deleteCommentAction(
 			};
 		}
 
-		return await deleteComment(postId, commentId);
+		const response = await fetch(
+			`http://localhost:5000/api/posts/${postId}/comments/${commentId}`,
+			{
+				method: "DELETE",
+				headers: {
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при удалении комментария",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: data.data || "Комментарий успешно удален",
+		};
 	} catch (error) {
 		return {
 			ok: false,
@@ -81,14 +116,11 @@ export async function deleteCommentAction(
 	}
 }
 
-/**
- * Серверное действие для редактирования комментария
- */
 export async function editCommentAction(
 	postId: string,
 	commentId: string,
 	formData: FormData,
-): Promise<ApiResponse<Comment>> {
+) {
 	try {
 		const content = formData.get("content");
 		const cookieStore = await cookies();
@@ -110,7 +142,35 @@ export async function editCommentAction(
 			};
 		}
 
-		return await editComment(postId, commentId, content);
+		const response = await fetch(
+			`http://localhost:5000/api/posts/${postId}/comments/${commentId}`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+				body: JSON.stringify({ content }),
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при редактировании комментария",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Комментарий успешно отредактирован",
+			data: data.data,
+		};
 	} catch (error) {
 		return {
 			ok: false,
@@ -123,13 +183,7 @@ export async function editCommentAction(
 	}
 }
 
-/**
- * Серверное действие для обновления поста
- */
-export async function updatePostAction(
-	postId: string,
-	content: string,
-): Promise<ApiResponse<Post>> {
+export async function updatePostAction(postId: string, content: string) {
 	try {
 		const cookieStore = await cookies();
 		const token = cookieStore.get("token")?.value;
@@ -150,7 +204,35 @@ export async function updatePostAction(
 			};
 		}
 
-		return await updatePost(postId, content);
+		const response = await fetch(
+			`http://localhost:5000/api/posts/update/${postId}`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+				body: JSON.stringify({ content }),
+			},
+		);
+
+		const data = await response.json();
+		console.log("data: ", data);
+		if (!response.ok) {
+			return {
+				ok: false,
+				status: "error",
+				message: data.message || "Ошибка при обновлении статьи",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Статья успешно обновлена",
+			data: data.data,
+		};
 	} catch (error) {
 		return {
 			ok: false,
@@ -161,12 +243,7 @@ export async function updatePostAction(
 	}
 }
 
-/**
- * Серверное действие для удаления поста
- */
-export async function deletePostAction(
-	postId: string,
-): Promise<ApiResponse<void>> {
+export async function deletePostAction(postId: string) {
 	try {
 		const cookieStore = await cookies();
 		const token = cookieStore.get("token")?.value;
@@ -179,7 +256,32 @@ export async function deletePostAction(
 			};
 		}
 
-		return await deletePost(postId);
+		const response = await fetch(
+			`http://localhost:5000/api/posts/delete/${postId}`,
+			{
+				method: "DELETE",
+				headers: {
+					Cookie: `token=${token}`,
+				},
+				credentials: "include",
+			},
+		);
+
+		const data = await response.json();
+
+		if (!response.ok || data.status === "error") {
+			return {
+				ok: false,
+				status: "error",
+				message: "Ошибка при удалении статьи",
+			};
+		}
+
+		return {
+			ok: true,
+			status: "success",
+			message: "Статья успешно удалена",
+		};
 	} catch (error) {
 		return {
 			ok: false,

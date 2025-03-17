@@ -2,9 +2,7 @@
 
 import { signIn, signOut, signUp } from "@/core/interface-adapters/auth/auth";
 import { AuthError } from "next-auth";
-
-// Определяем тип для провайдеров аутентификации
-export type AuthProviders = "credentials" | "google" | "github";
+import { AuthProviders } from "@/core/2.application/types/auth";
 
 export async function authenticateAction(
 	prevState: string | undefined,
@@ -35,8 +33,8 @@ export async function registerAction(
 	try {
 		console.log("START REGISTER");
 		await signUp({
-			login: formData.get("login") as string | undefined,
-			password: formData.get("password") as string | undefined,
+			login: formData.get("login") as string,
+			password: formData.get("password") as string,
 		});
 
 		console.log("FINISH!!!");
@@ -56,3 +54,4 @@ export async function registerAction(
 export async function signOutAction() {
 	await signOut({ redirectTo: "/sign-in" });
 }
+

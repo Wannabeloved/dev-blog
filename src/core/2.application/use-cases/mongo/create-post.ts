@@ -14,22 +14,34 @@ interface Post {
 	publishedAt: string;
 }
 
-export async function getPost(id: string): Promise<ApiResponse<Post>> {
+interface CreatePostData {
+	title: string;
+	content: string;
+	imageUrl: string;
+}
+
+export async function createPost(
+	postData: CreatePostData,
+	token: string,
+): Promise<ApiResponse<Post>> {
 	try {
-		console.log("Fetching post with id:", id);
-		const res = await fetch(`http://localhost:5000/api/posts/${id}`, {
-			method: "GET",
+		const res = await fetch("http://localhost:5000/api/posts/create", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Cookie: `token=${token}`,
+			},
+			body: JSON.stringify(postData),
 			credentials: "include",
 		});
+
 		const data = await res.json();
-		console.log("data:", data);
-		console.log("API response:", data);
 
 		if (isErrorResponse(data)) throw data;
 
 		return { ok: true, ...data };
 	} catch (err) {
-		console.error("getPost - error:", err);
+		console.error("createPost - error:", err);
 		return { ok: false, ...(err as any) };
 	}
 }

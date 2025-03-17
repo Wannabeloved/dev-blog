@@ -24,15 +24,7 @@ async function getUser(login: string) {
 		throw new Error("Failed to fetch user.");
 	}
 }
-
-interface UserCredentials {
-	login?: string;
-	email?: string;
-	password?: string;
-	[key: string]: unknown;
-}
-
-async function createUser(credentials: UserCredentials) {
+async function createUser(credentials) {
 	try {
 		console.log("FIND USER");
 		const user = await UsersDB.createUser(credentials);
@@ -44,8 +36,7 @@ async function createUser(credentials: UserCredentials) {
 		throw new Error("Failed to create user.");
 	}
 }
-
-export const signUp = async (credentials: UserCredentials) => {
+export const signUp = async (credentials: Partial<Record<string, unknown>>) => {
 	const user = await createUser(credentials);
 	return user;
 };
@@ -75,3 +66,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		GitHubProvider,
 	],
 });
+

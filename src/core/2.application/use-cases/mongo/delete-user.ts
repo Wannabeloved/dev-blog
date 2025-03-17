@@ -1,10 +1,20 @@
-import { ApiResponse } from "../../types/api";
-import { del } from "../../utils/api";
+import { ApiResponse, isErrorResponse } from "../../types/api";
 
-/**
- * Удаляет пользователя
- */
 export async function deleteUser(userId: string): Promise<ApiResponse<void>> {
-	return del<void>(`/admin/users/${userId}`);
+	try {
+		const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+			method: "DELETE",
+			credentials: "include",
+		});
+
+		const data = await res.json();
+
+		if (isErrorResponse(data)) throw data;
+
+		return { ok: true, ...data };
+	} catch (err) {
+		console.error("deleteUser - error:", err);
+		return { ok: false, ...(err as any) };
+	}
 }
 
