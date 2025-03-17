@@ -19,6 +19,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { UseFormReturn } from "react-hook-form";
+import React from "react";
 
 import { TelegramSvg } from "./ui/telegram-svg";
 import { GitHubSvg } from "./ui/github-svg";
@@ -29,6 +31,11 @@ import { Form } from "../shared/Form";
 import { Model } from "./model";
 import Link from "next/link";
 
+type FormValues = {
+	email: string;
+	password: string;
+};
+
 export function LoginForm({
 	action,
 	className,
@@ -36,7 +43,15 @@ export function LoginForm({
 }: { action: AuthAction } & React.ComponentProps<"div">) {
 	return (
 		<Model action={action}>
-			{({ formAction, form, state }) => (
+			{({
+				formAction,
+				form,
+				state,
+			}: {
+				formAction: (formData: FormData) => void;
+				form: UseFormReturn<FormValues>;
+				state: string | undefined;
+			}) => (
 				<div className={cn("flex flex-col gap-6", className)} {...props}>
 					<Card>
 						<CardHeader className="text-center">

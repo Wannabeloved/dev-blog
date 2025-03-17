@@ -60,3 +60,4 @@ bun dev
 ```
 
 Сервер будет запущен на [http://localhost:3000](http://localhost:3000).
+
