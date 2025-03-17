@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Card,
 	CardContent,
@@ -24,15 +25,30 @@ export default function CreatePostForm() {
 	const [imageUrl, setImageUrl] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [previewImage, setPreviewImage] = useState<string | null>(null);
+	const [isImageLoading, setIsImageLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const handleImageUrlChange = (url: string) => {
 		setImageUrl(url);
 		if (url) {
+			setIsImageLoading(true);
 			setPreviewImage(url);
 		} else {
 			setPreviewImage(null);
+			setIsImageLoading(false);
 		}
+	};
+
+	const handleImageLoad = () => {
+		setIsImageLoading(false);
+	};
+
+	const handleImageError = () => {
+		setPreviewImage(null);
+		setIsImageLoading(false);
+		toast.error("Ошибка загрузки изображения", {
+			description: "Не удалось загрузить изображение по указанному URL",
+		});
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -108,23 +124,26 @@ export default function CreatePostForm() {
 						/>
 					</div>
 
-					{previewImage && (
+					{(previewImage || isImageLoading) && (
 						<div className="mt-4">
 							<Label>Предпросмотр изображения</Label>
 							<div className="relative w-full h-64 mt-2 border rounded-md overflow-hidden">
-								<Image
-									src={previewImage}
-									alt="Предпросмотр"
-									fill
-									style={{ objectFit: "cover" }}
-									onError={() => {
-										setPreviewImage(null);
-										toast.error("Ошибка загрузки изображения", {
-											description:
-												"Не удалось загрузить изображение по указанному URL",
-										});
-									}}
-								/>
+								{isImageLoading && (
+									<Skeleton className="w-full h-full absolute inset-0" />
+								)}
+								{previewImage && (
+									<Image
+										src={previewImage}
+										alt="Предпросмотр"
+										fill
+										style={{
+											objectFit: "cover",
+											display: isImageLoading ? "none" : "block",
+										}}
+										onLoad={handleImageLoad}
+										onError={handleImageError}
+									/>
+								)}
 							</div>
 						</div>
 					)}

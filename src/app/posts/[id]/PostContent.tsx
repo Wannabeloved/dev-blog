@@ -1,14 +1,11 @@
 "use client";
 
 import { getPost } from "@/core/2.application/use-cases/mongo/get-post";
-import type {
-	Comment,
-	Post,
-} from "@/core/2.application/use-cases/mongo/get-post";
 import { notFound } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/adapters/store/hooks/useUser";
 import {
 	addCommentAction,
@@ -20,6 +17,24 @@ import {
 import { useRouter } from "next/navigation";
 import { Trash2, Pencil, Save, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+
+// Определяем типы локально
+interface Comment {
+	id: string;
+	content: string;
+	author: string;
+	publishedAt: string;
+}
+
+interface Post {
+	id: string;
+	title: string;
+	content: string;
+	imageUrl: string;
+	comments: Comment[];
+	publishedAt: string;
+}
 
 interface PostContentProps {
 	postId: string;
@@ -42,6 +57,7 @@ export default function PostContent({ postId }: PostContentProps) {
 		type: "success" | "error";
 		text: string;
 	} | null>(null);
+	const [isImageLoading, setIsImageLoading] = useState(true);
 	const router = useRouter();
 	const { user } = useUser();
 
@@ -254,11 +270,21 @@ export default function PostContent({ postId }: PostContentProps) {
 	return (
 		<article className="w-full mx-auto p-4">
 			<h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-			<img
-				src={post.imageUrl}
-				alt={post.title}
-				className="w-full h-auto rounded-lg mb-6"
-			/>
+
+			<div className="relative w-full h-auto rounded-lg mb-6 aspect-video">
+				{isImageLoading && (
+					<Skeleton className="absolute inset-0 w-full h-full rounded-lg" />
+				)}
+				<Image
+					src={post.imageUrl}
+					alt={post.title}
+					className="rounded-lg"
+					fill
+					style={{ objectFit: "cover", opacity: isImageLoading ? 0 : 1 }}
+					onLoad={() => setIsImageLoading(false)}
+					onError={() => setIsImageLoading(false)}
+				/>
+			</div>
 
 			{editMessage && (
 				<div

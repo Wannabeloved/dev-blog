@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
 	Card,
@@ -9,6 +11,8 @@ import {
 } from "../../shared/vertical-card";
 import Link from "next/link";
 import { Calendar, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
 	title: React.ReactNode;
@@ -27,6 +31,8 @@ const PostCard = ({
 	publishedAt,
 	id,
 }: Props) => {
+	const [isImageLoading, setIsImageLoading] = useState(true);
+
 	// Форматирование даты с обработкой ошибок
 	let formattedDate = publishedAt;
 	try {
@@ -59,7 +65,10 @@ const PostCard = ({
 						<span>{comments.length}</span>
 					</div>
 				</div>
-				<CardFooter className="row-span-full col-end-3 flex items-center justify-center rounded-2xl p-0">
+				<CardFooter className="row-span-full col-end-3 flex items-center justify-center rounded-2xl p-0 relative">
+					{isImageLoading && (
+						<Skeleton className="absolute inset-0 w-full h-full rounded-xl" />
+					)}
 					<Image
 						src={imageUrl}
 						alt={typeof title === "string" ? title : "Post image"}
@@ -68,6 +77,9 @@ const PostCard = ({
 						className="rounded-xl"
 						width={100}
 						height={100}
+						onLoad={() => setIsImageLoading(false)}
+						onError={() => setIsImageLoading(false)}
+						style={{ opacity: isImageLoading ? 0 : 1 }}
 					/>
 				</CardFooter>
 			</Card>
